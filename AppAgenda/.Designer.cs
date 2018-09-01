@@ -37,7 +37,7 @@
             // 
             this.btnContato.Location = new System.Drawing.Point(21, 26);
             this.btnContato.Name = "btnContato";
-            this.btnContato.Size = new System.Drawing.Size(75, 23);
+            this.btnContato.Size = new System.Drawing.Size(144, 59);
             this.btnContato.TabIndex = 0;
             this.btnContato.Text = "Contato";
             this.btnContato.UseVisualStyleBackColor = true;
@@ -46,7 +46,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(101, 110);
+            this.label1.Location = new System.Drawing.Point(216, 151);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(35, 13);
             this.label1.TabIndex = 1;
@@ -54,7 +54,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(65, 151);
+            this.textBox1.Location = new System.Drawing.Point(257, 151);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 20);
             this.textBox1.TabIndex = 2;
@@ -70,6 +70,7 @@
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Agenda Pessoal";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
