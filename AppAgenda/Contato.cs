@@ -21,7 +21,7 @@ namespace AppAgenda
             this.Cep = "";
          
         }
-        public Contato(int codigo, string nome, string email, string telefone,
+        public Contato(int contatoId, string nome, string email, string telefone,
             string rua, string bairro, string cidade, string estado, string cep)
         {
             this.ContatoId = contatoId;
@@ -35,31 +35,30 @@ namespace AppAgenda
             this.Cep = cep;
         }
 
-        private int contatoId;
+       
         public int ContatoId { get; set; }
 
-        private string nome;
+      
         public string Nome { get; set; }
 
-        private string email;
         public string Email { get; set; }
 
-        private string telefone;
+     
         public string Telefone { get; set; }
 
-        private string rua;
+       
         public string Rua { get; set; }
 
-        private string bairro;
+        
         public string Bairro { get; set; }
 
-        private string cidade;
+        
         public string Cidade { get; set; }
 
-        private string estado;
+       
         public string Estado { get; set; }
 
-        private string cep;
+        
         public string Cep { get; set; }
     }
 }

@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.SqlClient;
+
 
 namespace AppAgenda
 {
@@ -57,8 +59,6 @@ namespace AppAgenda
             txtCidade.Clear();
             txtEstado.Clear();
             txtCEP.Clear();
-
-
         }
 
         private void pDados_Layout(object sender, LayoutEventArgs e)
@@ -68,8 +68,9 @@ namespace AppAgenda
 
         private void btnInserir_Click(object sender, EventArgs e)
         {
-            this.operacao = "Inserir";
+            this.operacao = "inserir";
             this.AlteraBotoes(2);
+            
         }
 
         private void btnCancelar_Click(object sender, EventArgs e)
@@ -86,22 +87,37 @@ namespace AppAgenda
             contato.Email = txtEmail.Text;
             contato.Telefone = txtTelefone.Text;
             contato.Rua = txtRua.Text;
-            contato.Cidade = txtCidade.Text;
+            contato.Bairro = txtBairro.Text;
+            contato.Cidade = txtCidade.Text;     
             contato.Estado = txtEstado.Text;
             contato.Cep = txtCEP.Text;
 
+            // insira registro banco de dados
+            String strConexao = @"Data Source=DESKTOP-GM0RQAV\SQLEXPRESS;Initial Catalog=AgendaDB;Integrated Security=True";
+            Conexao conexao = new Conexao(strConexao);
+            DALContato dal = new DALContato(conexao);
+
             if (this.operacao == "inserir")
             {
-                // insira registro banco de dados
+
+                dal.Incluir(contato);
+                MessageBox.Show("O codigo gerado foi:" + contato.ContatoId.ToString());
             }
             else
             {
-                contato.ContatoId = int.Parse(txtCodigo.Text);
-                //Altera contato que esta na tela
+                contato.ContatoId = Convert.ToInt32(txtCodigoId.Text);
+                dal.Alterar(contato);
+                
             }
 
 
 
+        }
+
+        private void btnLocalizar_Click(object sender, EventArgs e)
+        {
+            FormConsultaContatos consulta = new FormConsultaContatos();
+            consulta.ShowDialog();
         }
     }
 }
