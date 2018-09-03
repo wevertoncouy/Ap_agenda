@@ -12,6 +12,9 @@ namespace AppAgenda
 {
     public partial class FormConsultaContatos : Form
     {
+        
+        public int codigo = 0;
+
         public FormConsultaContatos()
         {
             InitializeComponent();
@@ -27,6 +30,20 @@ namespace AppAgenda
             Conexao cx = new Conexao(@"Data Source=DESKTOP-GM0RQAV\SQLEXPRESS;Initial Catalog=AgendaDB;Integrated Security=True");
             DALContato dal = new DALContato(cx);
             dgDados.DataSource = dal.Localizar(txtValor.Text);
+        }
+
+        private void dgDados_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dgDados_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex > 0)
+            {
+                this.codigo = Convert.ToInt32(dgDados.Rows[e.RowIndex].Cells[0].Value);
+                this.Close();
+            }
         }
     }
 }

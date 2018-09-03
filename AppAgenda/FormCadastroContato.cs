@@ -46,6 +46,7 @@ namespace AppAgenda
             {
                 btnExcluir.Enabled = true;
                 btnAlterar.Enabled = true;
+                btnCancelar.Enabled = true;
             }
         }
 
@@ -82,35 +83,51 @@ namespace AppAgenda
 
         private void btnSalvar_Click(object sender, EventArgs e)
         {
-            Contato contato = new Contato();
-            contato.Nome = txtNome.Text;
-            contato.Email = txtEmail.Text;
-            contato.Telefone = txtTelefone.Text;
-            contato.Rua = txtRua.Text;
-            contato.Bairro = txtBairro.Text;
-            contato.Cidade = txtCidade.Text;     
-            contato.Estado = txtEstado.Text;
-            contato.Cep = txtCEP.Text;
+            try
+            { 
+                Contato contato = new Contato();
 
-            // insira registro banco de dados
-            String strConexao = @"Data Source=DESKTOP-GM0RQAV\SQLEXPRESS;Initial Catalog=AgendaDB;Integrated Security=True";
-            Conexao conexao = new Conexao(strConexao);
-            DALContato dal = new DALContato(conexao);
+                if (txtNome.Text.Length <= 0)
+                {
+                    MessageBox.Show("Nome obrigatório");
+                    return;
+                }
 
-            if (this.operacao == "inserir")
-            {
+                contato.Nome = txtNome.Text;
+                contato.Email = txtEmail.Text;
+                contato.Telefone = txtTelefone.Text;
+                contato.Rua = txtRua.Text;
+                contato.Bairro = txtBairro.Text;
+                contato.Cidade = txtCidade.Text;
+                contato.Estado = txtEstado.Text;
+                contato.Cep = txtCEP.Text;
 
-                dal.Incluir(contato);
-                MessageBox.Show("O codigo gerado foi:" + contato.ContatoId.ToString());
+                // insira registro banco de dados
+                String strConexao = @"Data Source=DESKTOP-GM0RQAV\SQLEXPRESS;Initial Catalog=AgendaDB;Integrated Security=True";
+                Conexao conexao = new Conexao(strConexao);
+                DALContato dal = new DALContato(conexao);
+
+                if (this.operacao == "inserir")
+                {
+
+                    dal.Incluir(contato);
+                    MessageBox.Show("O codigo gerado foi: " + contato.ContatoId.ToString());
+                }
+                else
+                {
+                    contato.ContatoId = Convert.ToInt32(txtCodigoId.Text);
+                    dal.Alterar(contato);
+                    MessageBox.Show("Registro alterado");
+                    //(Alterar) contato que esta na tela
+
+                }
+                this.AlteraBotoes(1);
+                this.LimparCampos();
             }
-            else
+            catch (Exception erro)
             {
-                contato.ContatoId = Convert.ToInt32(txtCodigoId.Text);
-                dal.Alterar(contato);
-                
+                MessageBox.Show(erro.Message);
             }
-
-
 
         }
 
@@ -118,6 +135,45 @@ namespace AppAgenda
         {
             FormConsultaContatos consulta = new FormConsultaContatos();
             consulta.ShowDialog();
+            if (consulta.codigo != 0) // codigo de consulta
+            {
+                String strConexao = @"Data Source=DESKTOP-GM0RQAV\SQLEXPRESS;Initial Catalog=AgendaDB;Integrated Security=True";
+                Conexao conexao = new Conexao(strConexao);
+                DALContato dal = new DALContato(conexao);
+                Contato contato = dal.carregaContato(consulta.codigo);
+                txtCodigoId.Text = contato.ContatoId.ToString();
+                txtNome.Text = contato.Nome;
+                txtEmail.Text = contato.Email;
+                txtTelefone.Text = contato.Telefone;
+                txtRua.Text = contato.Rua;
+                txtBairro.Text = contato.Bairro;
+                txtCidade.Text = contato.Cidade;
+                txtEstado.Text = contato.Estado;
+                txtCEP.Text = contato.Cep;
+
+                this.AlteraBotoes(3);//habilita os botões alterar e Excluir
+            }
+            consulta.Dispose();
+        }
+
+        private void btnAlterar_Click(object sender, EventArgs e)
+        {
+            this.operacao = "alterar";
+            this.AlteraBotoes(2);
+        }
+
+        private void btnExcluir_Click(object sender, EventArgs e)
+        {
+            DialogResult d = MessageBox.Show("Deseja excluir o registro?","Aviso", MessageBoxButtons.YesNo);
+            if (d.ToString() == "yes")
+            {
+                String strConexao = @"Data Source=DESKTOP-GM0RQAV\SQLEXPRESS;Initial Catalog=AgendaDB;Integrated Security=True";
+                Conexao conexao = new Conexao(strConexao);
+                DALContato dal = new DALContato(conexao);
+                dal.Excluir(Convert.ToInt32(txtCodigoId.Text));
+                this.AlteraBotoes(1);
+                this.LimparCampos();
+            }
         }
     }
 }
